@@ -365,7 +365,7 @@ Ext.onReady(function(){
 				this.addActiveFilter(filterType, querykey, anchor.dom.innerHTML, href, multiple);
 				this.reset();
 			},this);
-		},
+		}
 	}); //end search
 	new Search.search();
 }); //end onready
