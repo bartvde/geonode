@@ -1,0 +1,271 @@
+/* setting font fixes combobox rendering issues in IE. See
+ * http://extjs.com/forum/showthread.php?t=72505 */
+body {
+    font-family:helvetica,tahoma,verdana,sans-serif;
+}
+
+/* don't wrap lines on any tooltips */
+.x-tip {
+    white-space: nowrap;
+}
+
+/* application css goes here */
+
+.olControlAttribution {
+    text-align: right;
+    font-size: 9px;
+    bottom: 2px;
+}
+
+.mymouseposition {
+    right: 8px;
+    bottom: 10px;
+}
+
+.mymapclass{
+    position:absolute;
+}
+
+.mytoolwindowclass {
+    width: 342px !important;
+    height: 78px !important;
+}
+
+.mysearchwindowclass {
+	width: 100%;
+    height: 100%;
+    min-width: 492px;
+    min-height: 300px;
+}
+
+.searchContainer {
+	height: 120px !important;
+	margin-top: 20px;	
+}
+
+/*.nominatimURLClass {
+	padding-left: 10px;
+	font-size: 24px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	margin-top: 10px;
+}
+
+.searchFieldClass {
+	padding-left: 10px !important;
+	font-size: 24px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	margin-top: 10px;	
+}*/
+
+.searchSubmitClass {
+	margin-left: 15px;
+	height: 40px !important;	
+}
+
+.searchSubmitBtn {
+	font-size: 24px !important;
+	height: 40px !important;
+	padding: 8px !important;
+}
+
+.searchResultsPanel {
+	position:relative;
+	top: 60px !important;
+	left: 0px !important;
+}
+
+.searchResults {
+	position: relative;
+	top: -100%;
+	margin-top: 120px;	
+	overflow: auto;
+	padding: 15px;
+}
+
+.searchResultsError {
+	display: block;
+	font-size: 18px;
+	color: red;	
+}
+
+#searchPanel .x-form-element {
+	padding: 0px !important;
+	margin-left: 10px;
+	width: auto !important;	
+}
+
+#searchPanel .x-form-item-label {
+	padding: 0px !important;
+	width: auto !important;	
+}
+
+#searchPanel input {
+	padding-left: 10px !important;
+	font-size: 24px;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	margin-top: 10px;
+	padding-right: 10px !important;
+}
+
+.searchResult {
+	
+}
+
+.searchResult:hover {
+	cursor: hand;
+	cursor: pointer;
+	background-color: yellow;
+}
+
+.searchResultPlaceName {
+	font-size: 18px;
+}
+
+#searchSpinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: -100px 0 0 -100px;
+	height: 200px;
+	width: 200px;
+	text-indent: 250px;
+	white-space: nowrap;
+	overflow: hidden;	
+	-webkit-mask-image: url(img/spinner.png);
+	background-color: #000;
+	-webkit-animation-name: spinnerRotate;
+	-webkit-animation-duration: 2s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+}
+
+@-webkit-keyframes spinnerRotate {
+	from {
+		-webkit-transform:rotate(0deg);
+	}
+	to {
+		-webkit-transform:rotate(360deg);
+	}
+}
+
+.toolContainer {
+    z-index: 1000;
+    position: relative;
+    top: 300px;
+    width: 30px;
+    height: 180px;
+    background-color: #D0D0D0;
+    -moz-border-radius-bottomright: 10px;
+    -moz-border-radius-topright: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    cursor: hand;
+    cursor: pointer;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    transition: all 0.2s linear;
+	-webkit-transition: all 0.2s linear;
+	-moz-transition: all 0.2s linear;
+	-o-transition: all 0.2s linear;
+	-ms-transition: all 0.2s linear;
+}
+
+.toolContainer:hover {
+    box-shadow: 0 3px 20px #000;
+}
+
+p.css-vertical-text {
+	color:#333;
+	border:0px solid red;
+	writing-mode:tb-rl;
+	-webkit-transform:rotate(90deg);
+	-moz-transform:rotate(90deg);
+	-o-transform: rotate(90deg);
+	white-space:nowrap;
+	display:block;
+	bottom:0;
+	width:20px;
+	height:20px;
+    font-family: tahoma,arial,verdana,sans-serif;
+	font-size:24px;
+	font-weight:normal;
+	text-shadow: 0px 0px 1px #333;
+    position: relative;
+    left: 8px;
+    top: 20px;
+}
+
+/*.x-btn .gxp-icon-zoomtoextent {
+   /* background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png);/
+    height: 60px !important;
+    width: 60px !important;
+
+}*/
+
+.x-btn .gxp-icon-addfeature {
+    /*background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png);*/
+    height: 60px !important;
+    width: 60px !important;
+
+}
+
+.x-btn .gxp-icon-getfeatureinfo {
+    /*background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png); */
+    height: 60px !important;
+    width: 60px !important;
+}
+
+/*.x-btn .gxp-icon-zoom-previous {
+    /*background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png);/
+    height: 60px !important;
+    width: 60px !important;
+
+}
+
+.x-btn .gxp-icon-zoom-next {
+    /*background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png);/
+    height: 60px !important;
+    width: 60px !important;
+
+}
+
+.x-btn .gxp-icon-zoom-in {
+    /*background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png);/
+    height: 60px !important;
+    width: 60px !important;
+
+}
+
+.x-btn .gxp-icon-zoom-out {
+    /*background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png); /
+    height: 60px !important;
+    width: 60px !important;
+
+}*/
+
+.x-btn .gxp-icon-distance-bearing-generic {
+    background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png);
+    height: 60px !important;
+    width: 60px !important;
+
+}
+
+.x-btn .gxp-icon-distance-bearing-hospitals {
+    background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png);
+    height: 60px !important;
+    width: 60px !important;
+
+}
+
+.x-btn .gxp-icon-distance-bearing-schools {
+    background-image: url(http://localhost:9080/src/gxp/theme/img/silk/map_editzusy.png);
+    height: 60px !important;
+    width: 60px !important;
+
+}
