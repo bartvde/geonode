@@ -1,13 +1,5 @@
 {% include 'geonode/ext_header.html' %}
 {% include 'geonode/salamati_header.html' %}
-<style type="text/css">
-#centerpanel {
-    margin-top: 81px;
-}
-#eastpanel {
-    margin-top: 81px;
-}
-</style>
 <script type="text/javascript">
 var app;
 Ext.onReady(function() {
@@ -16,6 +8,14 @@ Ext.onReady(function() {
         authStatus: {% if user.is_authenticated %} 200{% else %} 401{% endif %},
         proxy: "/proxy/?url=",
         printService: "{{GEOSERVER_BASE_URL}}pdf/",
+        portalConfig: {
+            items: [{
+                xtype: "container",
+                layout: "fit",
+                height: 81,
+                region: "north"
+            }]
+        },
         /* The URL to a REST map configuration service.  This service 
          * provides listing and, with an authenticated user, saving of 
          * maps on the server for sharing and editing.
@@ -26,7 +26,6 @@ Ext.onReady(function() {
         localCSWBaseUrl: "{{ CATALOGUE_BASE_URL }}",
         csrfToken: "{{ csrf_token }}"
     }, {{ config }});
-
 
     app = new salamati.Viewer(config);
 {% endautoescape %}
