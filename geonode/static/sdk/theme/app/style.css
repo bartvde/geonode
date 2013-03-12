@@ -16,3 +16,7 @@ body {
     font-size: 9px;
     bottom: 2px;
 }
+
+.map-title-header {
+    margin-right: 10px;
+}

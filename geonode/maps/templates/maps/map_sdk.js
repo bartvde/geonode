@@ -1,5 +1,6 @@
 {% include 'geonode/ext_header.html' %}
 {% include 'geonode/sdk_header.html' %}
+<script type="text/javascript" src="{{ STATIC_URL}}geonode/js/maps/GeoNode-GeoExplorer.js"></script>
 <script type="text/javascript">
 var app;
 Ext.onReady(function() {

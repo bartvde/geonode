@@ -66,7 +66,7 @@ Ext.preg(GeoNode.plugins.LayerInfo.prototype.ptype, GeoNode.plugins.LayerInfo);
  *    - use different urls for saving a new map and updating an existing map
  *      than GeoExplorer does.
  */
-GeoNode.Composer = Ext.extend(GeoExplorer.Composer, {
+GeoNode.Composer = window.GeoExplorer && Ext.extend(GeoExplorer.Composer, {
 
     /** begin i18n */
     metadataFormCancelText : "UT:Cancel",
