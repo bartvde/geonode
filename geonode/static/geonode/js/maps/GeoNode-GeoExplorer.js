@@ -1,4 +1,81 @@
 Ext.ns("GeoNode.plugins");
+
+GeoNode.plugins.XHRTrouble = Ext.extend(gxp.plugins.Tool, {
+
+    ptype: 'gn_xhrtrouble',
+
+    connErrorTitleText: "UT:Connection Error",
+    connErrorText: "UT:The server returned an error",
+    connErrorDetailsText: "UT:Details...",
+
+    init: function(target) {
+        // global request proxy and error handling
+        OpenLayers.Request.events.on({
+            "failure": function(evt) {
+                this.displayXHRTrouble(evt.request);
+            },
+            scope: this
+        });
+        Ext.util.Observable.observeClass(Ext.data.Connection);
+        Ext.data.Connection.on({
+            "requestexception": function(conn, response, options) {
+                if(!options.failure) {
+                    var url = options.url;
+                    if (response.status === 401 && url.indexOf("http" !== 0) &&
+                                            url.indexOf(this.proxy) === -1) {
+                        this.authenticate(options);
+                    } else if (response.status != 405 && url != "/geoserver/rest/styles") {
+                        // 405 from /rest/styles is ok because we use it to
+                        // test whether we're authenticated or not
+                        this.displayXHRTrouble(response);
+                    }
+                }
+            },
+            scope: this
+        });
+        GeoNode.plugins.XHRTrouble.superclass.init.apply(this, arguments);
+    },
+
+    /** private method[displayXHRTrouble]
+     *  :arg respoonse: ``Object`` The XHR response object.
+     *
+     *  If something goes wrong with an AJAX request, show an error dialog
+     *  with a button to view the details (Django error).
+     */
+    displayXHRTrouble: function(response) {
+        response.status && Ext.Msg.show({
+            title: this.connErrorTitleText,
+            msg: this.connErrorText +
+                ": " + response.status + " " + response.statusText,
+            icon: Ext.MessageBox.ERROR,
+            buttons: {ok: this.connErrorDetailsText, cancel: true},
+            fn: function(result) {
+                if(result == "ok") {
+                    var details = new Ext.Window({
+                        title: response.status + " " + response.statusText,
+                        width: 400,
+                        height: 300,
+                        items: {
+                            xtype: "container",
+                            cls: "error-details",
+                            html: response.responseText
+                        },
+                        autoScroll: true,
+                        buttons: [{
+                            text: "OK",
+                            handler: function() { details.close(); }
+                        }]
+                    });
+                    details.show();
+                }
+            }
+        });
+    }
+
+});
+
+Ext.preg(GeoNode.plugins.XHRTrouble.prototype.ptype, GeoNode.plugins.XHRTrouble);
+
 /** api: constructor
  *  .. class:: LayerInfo(config)
  *
@@ -75,9 +152,6 @@ GeoNode.Composer = window.GeoExplorer && Ext.extend(GeoExplorer.Composer, {
     metaDataHeader: 'UT:About this Map',
     metaDataMapAbstract: 'UT:Abstract',
     metaDataMapTitle: 'UT:Title',
-    connErrorTitleText: "UT:Connection Error",
-    connErrorText: "UT:The server returned an error",
-    connErrorDetailsText: "UT:Details...",
     /** end i18n */
 
     ajaxLoginUrl: null,
@@ -87,30 +161,6 @@ GeoNode.Composer = window.GeoExplorer && Ext.extend(GeoExplorer.Composer, {
      */
     constructor: function(config) {
         this.titleTemplate = new Ext.Template("<a class='maplist' href='" + this.rest + "'>Maps</a> / <strong>{title}");
-        // global request proxy and error handling
-        OpenLayers.Request.events.on({
-            "failure": function(evt) {
-                this.displayXHRTrouble(evt.request);
-            },
-            scope: this
-        });
-        Ext.util.Observable.observeClass(Ext.data.Connection);
-        Ext.data.Connection.on({
-            "requestexception": function(conn, response, options) {
-                if(!options.failure) {
-                    var url = options.url;
-                    if (response.status === 401 && url.indexOf("http" !== 0) &&
-                                            url.indexOf(this.proxy) === -1) {
-                        this.authenticate(options);
-                    } else if (response.status != 405 && url != "/geoserver/rest/styles") {
-                        // 405 from /rest/styles is ok because we use it to
-                        // test whether we're authenticated or not
-                        this.displayXHRTrouble(response);
-                    }
-                }
-            },
-            scope: this
-        });
         GeoNode.Composer.superclass.constructor.apply(this, [config]);
     },
     /** private: method[showUrl]
@@ -184,6 +234,8 @@ GeoNode.Composer = window.GeoExplorer && Ext.extend(GeoExplorer.Composer, {
             url: "/search/api"
         };
         config.tools.push({
+            ptype: 'gn_xhrtrouble'
+        }, {
             actions: ["map-title-header"],
             actionTarget: "paneltbar"
         }, {
@@ -268,41 +320,6 @@ GeoNode.Composer = window.GeoExplorer && Ext.extend(GeoExplorer.Composer, {
                 url: this.rest + this.id + "/embed"
             }]
         }).show();
-    },
-    /** private method[displayXHRTrouble]
-     *  :arg respoonse: ``Object`` The XHR response object.
-     *
-     *  If something goes wrong with an AJAX request, show an error dialog
-     *  with a button to view the details (Django error).
-     */
-    displayXHRTrouble: function(response) {
-        response.status && Ext.Msg.show({
-            title: this.connErrorTitleText,
-            msg: this.connErrorText +
-                ": " + response.status + " " + response.statusText,
-            icon: Ext.MessageBox.ERROR,
-            buttons: {ok: this.connErrorDetailsText, cancel: true},
-            fn: function(result) {
-                if(result == "ok") {
-                    var details = new Ext.Window({
-                        title: response.status + " " + response.statusText,
-                        width: 400,
-                        height: 300,
-                        items: {
-                            xtype: "container",
-                            cls: "error-details",
-                            html: response.responseText
-                        },
-                        autoScroll: true,
-                        buttons: [{
-                            text: "OK",
-                            handler: function() { details.close(); }
-                        }]
-                    });
-                    details.show();
-                }
-            }
-        });
     },
     /** private: method[authenticate]
      * Show the login dialog for the user to login.
