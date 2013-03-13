@@ -57976,59 +57976,6 @@ GeoNode.ComposerMixin = {
     }
 };
 
-GeoNode.plugins.SaveHyperlink = Ext.extend(gxp.plugins.Tool, {
-
-    ptype: 'gn_savehyperlink',
-
-    init: function(target) {
-        GeoNode.plugins.SaveHyperlink.superclass.init.apply(this, arguments);
-        this.titleTemplate = new Ext.Template("<a class='maplist' href='" + this.target.rest + "'>Maps</a> / <strong>{title}");
-        // TODO
-        this.target.on("save", function(id) {
-            this.actions[0].update(this.getMapTitle());
-        }, this);
-    },
-
-    addActions: function() {
-        return GeoNode.plugins.SaveHyperlink.superclass.addActions.apply(this, [
-            new Ext.Container({cls: "map-title-header", html: this.getMapTitle()})
-        ]);
-    },
-
-    /** private: method[getPermalink]
-     *  :return: ``String``
-     *
-     *  Get the permalink for the current map.
-     */
-    getPermalink: function() {
-        permalinkTemplate = new Ext.Template("{protocol}//{host}/maps/{id}");
-        return permalinkTemplate.apply({
-            protocol: window.location.protocol,
-            host: window.location.host,
-            id: this.target.id
-        });
-    },
-
-    /** private: getMapTitle
-     *  :return: ``String``
-     *
-     *  Get the HTML to use in the map title container which is shown in the
-     *  top right of the panel top toolbar.
-     */
-    getMapTitle: function() {
-        var title;
-        if (this.target.id) {
-            title = '<a class="link" href="' + this.getPermalink() + '">' + this.target.about.title + '</a>';
-        } else {
-            title = "This map is currently unsaved";
-        }
-        return this.titleTemplate.apply({title: title});
-    }
-
-});
-
-Ext.preg(GeoNode.plugins.SaveHyperlink.prototype.ptype, GeoNode.plugins.SaveHyperlink);
-
 GeoNode.plugins.Save = Ext.extend(gxp.plugins.Tool, {
 
     metadataFormCancelText : "UT:Cancel",

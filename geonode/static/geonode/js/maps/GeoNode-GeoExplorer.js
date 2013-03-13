@@ -1,5 +1,58 @@
 Ext.ns("GeoNode.plugins");
 
+GeoNode.plugins.SaveHyperlink = Ext.extend(gxp.plugins.Tool, {
+
+    ptype: 'gn_savehyperlink',
+
+    init: function(target) {
+        GeoNode.plugins.SaveHyperlink.superclass.init.apply(this, arguments);
+        this.titleTemplate = new Ext.Template("<a class='maplist' href='" + this.target.rest + "'>Maps</a> / <strong>{title}");
+        // TODO
+        this.target.on("save", function(id) {
+            this.actions[0].update(this.getMapTitle());
+        }, this);
+    },
+
+    addActions: function() {
+        return GeoNode.plugins.SaveHyperlink.superclass.addActions.apply(this, [
+            new Ext.Container({cls: "map-title-header", html: this.getMapTitle()})
+        ]);
+    },
+
+    /** private: method[getPermalink]
+     *  :return: ``String``
+     *
+     *  Get the permalink for the current map.
+     */
+    getPermalink: function() {
+        permalinkTemplate = new Ext.Template("{protocol}//{host}/maps/{id}");
+        return permalinkTemplate.apply({
+            protocol: window.location.protocol,
+            host: window.location.host,
+            id: this.target.id
+        });
+    },
+
+    /** private: getMapTitle
+     *  :return: ``String``
+     *
+     *  Get the HTML to use in the map title container which is shown in the
+     *  top right of the panel top toolbar.
+     */
+    getMapTitle: function() {
+        var title;
+        if (this.target.id) {
+            title = '<a class="link" href="' + this.getPermalink() + '">' + this.target.about.title + '</a>';
+        } else {
+            title = "This map is currently unsaved";
+        }
+        return this.titleTemplate.apply({title: title});
+    }
+
+});
+
+Ext.preg(GeoNode.plugins.SaveHyperlink.prototype.ptype, GeoNode.plugins.SaveHyperlink);
+
 GeoNode.plugins.XHRTrouble = Ext.extend(gxp.plugins.Tool, {
 
     ptype: 'gn_xhrtrouble',
@@ -156,54 +209,11 @@ GeoNode.Composer = window.GeoExplorer && Ext.extend(GeoExplorer.Composer, {
 
     ajaxLoginUrl: null,
 
-    /** private: method[constructor]
-     *  Construct the composer.
-     */
-    constructor: function(config) {
-        this.titleTemplate = new Ext.Template("<a class='maplist' href='" + this.rest + "'>Maps</a> / <strong>{title}");
-        GeoNode.Composer.superclass.constructor.apply(this, [config]);
-    },
     /** private: method[showUrl]
      *  Do not show the url after map save.
      */
     showUrl: Ext.emptyFn,
-    /** private: method[getPermalink]
-     *  :return: ``String``
-     *
-     *  Get the permalink for the current map.
-     */
-    getPermalink: function() {
-        permalinkTemplate = new Ext.Template("{protocol}//{host}/maps/{id}");
-        return permalinkTemplate.apply({
-            protocol: window.location.protocol,
-            host: window.location.host,
-            id: this.id
-        });
-    },
-    /** private: getMapTitle
-     *  :return: ``String``
-     *
-     *  Get the HTML to use in the map title container which is shown in the
-     *  top right of the panel top toolbar.
-     */
-    getMapTitle: function() {
-        var title;
-        if (this.id) {
-            title = '<a class="link" href="' + this.getPermalink(this.id) + '">' + this.about.title + '</a>';
-        } else {
-            title = "This map is currently unsaved";
-        }
-        return this.titleTemplate.apply({title: title});
-    },
-    /** private: method[createTools]
-     * Create the toolbar configuration for the main panel.  This method can be 
-     * extended by derived explorer classes such as :class:`GeoExplorer.Composer`
-     * or :class:`GeoExplorer.Viewer` to provide specialized controls.
-     */
-    createTools: function() {
-        GeoNode.Composer.superclass.createTools.apply(this, arguments);
-        new Ext.Container({style: "margin-right: 10px", id: "map-title-header", html: this.getMapTitle()});
-    },
+
     /** api: method[loadConfig]
      *  :arg config: ``Object`` The config object passed to the constructor.
      *
@@ -236,8 +246,8 @@ GeoNode.Composer = window.GeoExplorer && Ext.extend(GeoExplorer.Composer, {
         config.tools.push({
             ptype: 'gn_xhrtrouble'
         }, {
-            actions: ["map-title-header"],
-            actionTarget: "paneltbar"
+            ptype: 'gn_savehyperlink'
+            /* TODO make sure it's in the right position */
         }, {
             ptype: "gn_layerinfo",
             actionTarget: ["layers.contextMenu"]
@@ -407,9 +417,6 @@ GeoNode.Composer = window.GeoExplorer && Ext.extend(GeoExplorer.Composer, {
           form.items.get(0).focus(false, 100);
     },
     initPortal: function() {
-        this.on("save", function(id) {
-            Ext.getCmp("map-title-header").update(this.getMapTitle());
-        }, this);
         this.on("beforesave", function(requestConfig, callback) {
             if (this._doSave === true) {
                 delete this._doSave;
